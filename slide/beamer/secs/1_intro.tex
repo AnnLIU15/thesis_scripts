@@ -1,0 +1,42 @@
+
+\section{Background}
+\subsection{Reinforcement Learning}
+\begin{frame}
+    \frametitle[\withcolorlogo]{Introduction of MARL}
+    \framesubtitle{In a nutshell}
+    \begin{picture}(0,0)
+        \put(0,55){
+            \begin{minipage}[t]{1\linewidth}
+                Agents \vspace{0.5em}\\\onslide<1->{MARL $^{[1]}$}
+            \end{minipage}
+        }
+        \put(0,-5){
+            \begin{columns}[t]
+                \begin{column}{0.05\textwidth}
+                \end{column}
+                \onslide<2->{
+                    \begin{column}{0.45\textwidth}
+                    \textbf{Assumptions about the agents' rewards:}
+                        \begin{itemize}
+                            \item Fully cooperative (Warehouse Management)
+                            \item Competitive (Go)
+                            \item Mixed (Automated Trading)
+                        \end{itemize}
+                    \end{column}}
+                \onslide<3->{
+                    \begin{column}{0.55\textwidth}
+                        \textbf{Type of solution concept the algorithm is designed:}
+                        \begin{itemize}
+                            \item Minimax/Nash/Correlated equilibrium
+                            \item Pareto-optimality/social welfare/fairness
+                            \item No-regret
+                            \item etc.
+                        \end{itemize}
+                    \end{column}}
+            \end{columns}
+        }
+        \put(-100,0){
+            \footnote[1]{S. V. Albrecht, F. Christianos, and L. Sch\"afer, Multi-Agent Reinforcement Learning: Foundations and Modern Approaches. \textit{MIT Press}, 2023.}
+        }
+    \end{picture}
+\end{frame}

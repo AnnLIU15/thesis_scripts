@@ -1,0 +1,39 @@
+﻿% \documentclass{libs/sysuthesis} % 默认使用电子版（不填充空白页）。如果需要双面打印版，请注释掉本行并启用下一行
+\documentclass[print-both-sides]{libs/sysuthesis} % 使用双面打印版（填充额外空白页以保证每一章开头都在奇数页）
+\usepackage{libs/sysucode}  % 在论文中使用代码
+
+\punctstyle{plain} % 使用英文标点风格
+
+\input{docs/info}     % 论文相关信息
+\begin{document}
+% 论文前置部分
+\frontmatter
+    \pagenumbering{Roman}
+    \makeUndergraduateCover    % 封面
+    % \makeProgressCheck  % 过程检查记录表
+    \maketableofcontents        % 目录
+% 论文主体部分
+\mainmatter
+    % 正文
+    \cite{*} % 需要一会删掉
+    \include{docs/chap01}
+    \newclearpage
+    \include{docs/chap02}
+    \newclearpage
+    \include{docs/chap03}
+    \newclearpage
+% 结语
+% 附录部分
+\backmatter
+    % 参考文献. 因不需要纳入章节目录, 故放入附录部分
+    % 实际上参考文献是属于论文主体部分
+    \makereferences
+    \newclearpage
+    % % 附录
+    % {
+    %     \appendix
+    %     \include{docs/appendix1}
+    %     \newclearpage
+    % }
+% \makeGrade      % 成绩评定记录表
+\end{document}

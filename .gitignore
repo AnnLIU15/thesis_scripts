@@ -1,3 +1,8 @@
+# latex
+*.synctex.gz
+*.bbl
+*.aux
+# others
 output
 result
 .vscode
