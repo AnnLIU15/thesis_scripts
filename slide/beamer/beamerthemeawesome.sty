@@ -85,7 +85,9 @@
         \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}
     },
 }
-
+\RequirePackage{xeCJK}
+% 设置中文支持
+\setCJKmainfont{Microsoft YaHei}[Path=./fonts/, Extension=.ttf, UprightFont=*]
 % \RequirePackage[
 %     backend=biber,
 %     style=alphabetic,
@@ -283,13 +285,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\setsansfont[
-    Ligatures=TeX,
-    BoldFont={* Bold},
-]{Times New Roman}
-\setmonofont[
-    Contextuals=Alternate
-]{Times New Roman}
+% \setsansfont[
+%     Ligatures=TeX,
+%     BoldFont={* Bold},
+% ]{Times New Roman}
+% \setmonofont[
+%     Contextuals=Alternate
+% ]{Times New Roman}
 
 \setbeamerfont{title}{
     size= \Huge,
