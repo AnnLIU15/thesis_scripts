@@ -3,7 +3,8 @@ import sys
 import bibtexparser
 from bibtexparser.bparser import BibTexParser
 from collections import OrderedDict
-
+from langid import classify
+import requests
 
 chinese_to_english_mapping = {
         '‘': "'",  # 中文单引号到英文单引号
@@ -170,9 +171,72 @@ def upper_name(entry, factor_pre = 2):
     
     return entry
 
+def strip_outer_braces(s):
+    # 循环去除两端的花括号
+    while 1:
+        break_flag = 1
+        if s.startswith('{'):
+            s = s[1:]
+            break_flag = 0
+        if s.endswith('}'):
+            s = s[:-1]
+            break_flag = 0
+        if break_flag:
+            break
+    return s
+
+
 def title_process(entry, factor_pre = 2):
     try:
-        entry['title'] = ' '.join(['{'*factor_pre + val + '}'*factor_pre for val in entry['title'].split(' ')])
+        new_name_list = []
+        for val in entry['title'].split(' '):
+            new_name_list.append('{'*factor_pre + strip_outer_braces(val) + '}'*factor_pre)
+        entry['title'] = ' '.join(new_name_list)
     except Exception:
         pass
+    return entry
+
+
+def get_abbreviated_title(title):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.0.0'
+    }
+
+    urls = [
+        f"http://8.138.123.116:9080/a/{requests.utils.quote(title)}",
+        f"https://abbreviso.toolforge.org/abbreviso/a/{requests.utils.quote(title)}"
+    ]
+
+    for url in urls:
+        try:
+            response = requests.get(url, headers=headers)
+            if response.status_code == 200:
+                return response.text  # Use `.text` instead of `.content.decode()` for simplicity
+        except requests.RequestException as e:
+            print(f"Error accessing {url}: {str(e)}")  # Better error handling
+
+    raise ValueError("Error: Unable to retrieve abbreviation\n" +
+                     "Please deploy your server according to the guidances\n" +
+                     "1. install node.js and npm [e.g. sudo apt install nodejs npm or https://nodejs.org/en/download]\n"
+                     "2. git clone https://github.com/marcinwrochna/abbrevIso.git && cd abbrevIso\n" + 
+                     "3. npm install express\n" +
+                     "4. node server.js\n" +
+                     "5. add \"http://0.0.0.0:5000/a/{requests.utils.quote(title)}\" in urls" 
+                     )  # General error message if all requests fail
+
+def abbreviate_journal_booktitle(entry):
+    if 'booktitle' in entry.keys():
+        info = entry['booktitle']
+        key = 'booktitle'
+    elif 'journal' in entry.keys():
+        info = entry['journal']
+        key = 'journal'
+    else:
+        info = None
+    if info:
+        lang, _ = classify(info)
+        if lang not in ['zh', 'ja', 'ko']:
+            entry[key] = get_abbreviated_title(info)
+        else:
+            pass
     return entry
