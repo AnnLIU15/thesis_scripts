@@ -7,17 +7,19 @@
 
 #show: university-theme.with(
   aspect-ratio: "4-3",
-  authors: ("xxx",),
+  authors: ("你好",),
   emails: ("xxxxx@mail2.sysu.edu.cn",),
-  institutions: ("中山大学",),
-  title: [xxxxxxxx],
-  date: datetime.today(),
+  institutions: ("xxx",),
+  title: [xxxxx],
+  date: datetime(year: 2024, month: 05, day: 17), //datetime.today(),
   logo: image("imgs/logo/校徽.svg", height: 30mm),
   inv-logo: image("imgs/logo/校徽-A63446.svg", height: 30mm),
   color-a: color-b,
   color-b: color-r,
   color-c: color-w,
   init-section: false,
+  ref: "ref/references.bib",
+  cls: "ref/ieee.csl",
   // lang: "English", // default: Chinese
 )
 #title-slide()

@@ -37,6 +37,8 @@
   inv-logo: none,
   lang: "Chinese",
   init-section: true,
+  ref: none,
+  cls: none,
   body,
 ) = {
   set page(
@@ -45,15 +47,27 @@
     header: none,
     footer: none,
   )
-  set text(size: 25pt)
+  // set text(size: 25pt)
   set text(
     lang: "zh",
-    font: ("SourceHanSansCN"),
+    font: ("Linux Libertine", "Source Han Sans SC"), // , "Source Han Serif SC" // Static Language Specific OTCs!!!
     size: 25pt,
     overhang: true,
     cjk-latin-spacing: auto,
   )
   show footnote.entry: set text(size: .6em)
+  if ref != none {
+    show bibliography: none
+    if cls != none {
+      bibliography(
+        "../" + ref,
+        title: none,
+        style: if cls != none { "../" + cls } else { "ieee" },
+        full: false,
+      )
+    }
+  }
+
   // show math.equation: set text(font: "latinmodern-math")
   uni-progress-bar.update(progress-bar)
   uni-colors.update((a: color-a, b: color-b, c: color-c))
@@ -172,14 +186,13 @@
     let color = uni-colors.at(loc)
     let sections = sections-state.at(loc)
     let sections_num = sections.len() + 1
+    // let color_grad = gradient.linear(color.a, color.b).sharp(2)
     set align(center + horizon)
     show: block.with(stroke: (bottom: 1mm + color.a), inset: 1em)
     set text(size: 1.5em)
     v(-10%)
-
     utils.register-section(name)
-
-    strong([#text(fill: color.a)[#sections_num.] #name])
+    strong([#text(fill: color.a)[#sections_num.]#h(4%)#name])
   })
   let footer = {
     set text(size: 10pt)
@@ -344,7 +357,7 @@
 }
 
 #let slide(title: none, header: none, footer: none, header-percent: 70%, body) = {
-  let body = pad(x: 2em, y: .5em, body)
+  let body = pad(x: 2em, y: 1em, body)
   show figure.caption: it => [#it.body] // 去除图xxx
   // set footnote(numbering: "[1]")
   let progress-barline = locate(

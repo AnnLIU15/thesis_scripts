@@ -76,9 +76,17 @@
   }
 }
 
+#let citef(lang: "en", content) = {
+  if type(content) == "content" {
+    footnote()[#text(lang: lang, cite(content, form: "full"))]
+  } else {
+    footnote()[#text(lang: lang, cite(label(content), form: "full"))]
+  }
+}
+
 #let polylux-outline-my(enum-args: (:), padding: 0pt) = locate(loc => {
   let sections = sections-state.final(loc)
-  
+
   pad(padding, enum(
     tight: false,
     spacing: 80% / sections.len(),

@@ -4,6 +4,8 @@
 *.aux
 # others
 output
+slide/typst/*.pdf
+slide/typst/*/*.otf
 result
 .vscode
 __pycache__
