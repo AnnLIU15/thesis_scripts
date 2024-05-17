@@ -21,6 +21,9 @@
 #let uni-inv-logo = state("uni-inv-logo", none)
 #let uni-institution = state("uni-institution", none)
 #let uni-lang = state("uni-lang", none)
+#let uni-barline_flag = state("uni-barline_flag", none)
+#let uni-grad = state("grad", none)
+
 
 #let university-theme(
   aspect-ratio: "16-9",
@@ -31,7 +34,9 @@
   date: none,
   color-a: rgb("#0C6291"),
   color-b: rgb("#A63446"),
-  color-c: rgb("#FBFEF9"),
+  color-c: rgb("#00561F"),
+  color-c1: rgb("#00561F"),
+  color-c2: rgb("#00561F"),
   progress-bar: true,
   logo: none,
   inv-logo: none,
@@ -39,6 +44,7 @@
   init-section: true,
   ref: none,
   cls: none,
+  progress-barline_flag: true,
   body,
 ) = {
   set page(
@@ -47,10 +53,10 @@
     header: none,
     footer: none,
   )
-  // set text(size: 25pt)
+  set text(size: 25pt)
   set text(
     lang: "zh",
-    font: ("Linux Libertine", "Source Han Sans SC"), // , "Source Han Serif SC" // Static Language Specific OTCs!!!
+    font: ("Linux Libertine", "Source Han Sans SC", "Noto Sans SC"),
     size: 25pt,
     overhang: true,
     cjk-latin-spacing: auto,
@@ -58,25 +64,26 @@
   show footnote.entry: set text(size: .6em)
   if ref != none {
     show bibliography: none
-    if cls != none {
       bibliography(
         "../" + ref,
         title: none,
         style: if cls != none { "../" + cls } else { "ieee" },
         full: false,
       )
-    }
   }
 
   // show math.equation: set text(font: "latinmodern-math")
   uni-progress-bar.update(progress-bar)
-  uni-colors.update((a: color-a, b: color-b, c: color-c))
+  uni-colors.update((a: color-a, b: color-b, c: color-c, c1: color-c1, c2: color-c2))
+  uni-grad.update(gradient.linear(color-c, color-c, color-c, 
+                                  color-c, color-c1, color-c2))
   uni-title.update(title)
   uni-authors.update(authors)
   uni-emails.update(emails)
   uni-institutions.update(institutions)
+  uni-barline_flag.update(progress-barline_flag)
   if lang == "Chinese" {
-    uni-short-date.update(date.display("[year]-[month repr:numerical]-[day]"))
+    uni-short-date.update(date.display("[year] 年 [month repr:numerical] 月 [day] 日"))
   } else {
     uni-short-date.update(date.display("[month repr:short] [day], [year]"))
   }
@@ -105,7 +112,7 @@
       let date = uni-short-date.at(loc)
       if logo != none {
         // pad(x: 0.5em, y: 0.5em, align(right, logo))
-        place(top + right, dx: -0.5em, dy: 0.5em, logo)
+        place(top + right, dx: -0.6em, dy: 0.5em, logo)
         // place(
         //   top + right,dy:0.5em,
         //   locate(loc => [
@@ -116,7 +123,7 @@
       place(
         top + center,
         dy: 20%,
-        text(size: 2.4em, fill: colors.a, strong(title)),
+        text(size: 2.4em, fill: colors.b, strong(title)),
       )
       // align(center + horizon, {
       //   block(inset: 0em, breakable: false, {
@@ -161,7 +168,8 @@
 #let new-section-slide(footer: none, name) = {
   let progress-barline = locate(
     loc => {
-      if uni-progress-bar.at(loc) {
+      let flag = uni-barline_flag.at(loc)
+      if flag and uni-progress-bar.at(loc) {
         let cell = block.with(width: 100%, height: 100%, above: 0pt, below: 0pt, breakable: false)
         let colors = uni-colors.at(loc)
 
@@ -180,31 +188,44 @@
     set align(top)
     counter(footnote).update(0) // 重置footnote的序号
     grid(rows: (auto, auto), row-gutter: 3mm, progress-barline)
+    locate(
+        loc => {
+          let flag = uni-barline_flag.at(loc)
+          let logo = uni-logo.at(loc)
+          if flag {
+          grid(rows: (auto, auto), row-gutter: 0mm, progress-barline)
+          } else {
+            []
+          }
+          place(top + right, dx: -0.6em, dy: 0.5em, logo)
+        },
+      )
   }
 
   let content = locate(loc => {
     let color = uni-colors.at(loc)
     let sections = sections-state.at(loc)
     let sections_num = sections.len() + 1
+    let grad = uni-grad.at(loc)
     // let color_grad = gradient.linear(color.a, color.b).sharp(2)
     set align(center + horizon)
-    show: block.with(stroke: (bottom: 1mm + color.a), inset: 1em)
+    show: block.with(stroke: (bottom: 1mm + grad), inset: 1em)
     set text(size: 1.5em)
     v(-10%)
     utils.register-section(name)
-    strong([#text(fill: color.a)[#sections_num.]#h(4%)#name])
+    heading(level: 2, [#sections_num.#h(4%)#name])
   })
   let footer = {
     set text(size: 10pt)
     set align(center + bottom)
-    let cell(fill: none, it) = rect(
+    let cell(fill: rgb("#f6f5f4"), fill_text: rgb("77767b"), it) = rect(
       width: 100%,
       height: 100%,
       inset: 1mm,
       outset: 0mm,
       fill: fill,
       stroke: none,
-      align(horizon, text(fill: white, it)),
+      align(horizon, text(fill: fill_text, it)),
     )
     if footer != none {
       footer
@@ -223,19 +244,19 @@
             authors_str = authors_str + val + h(5%)
           }
         }
-        show: block.with(width: 100%, height: auto, fill: colors.b)
+        // show: block.with(width: 100%, height: auto, fill: colors.c)
         grid(
-          columns: (20%, 1fr, 12%, 8%),
+          columns: (15%, 1fr, 15%),
           // columns: (20%, 1fr, 20%),
           rows: (1.5em, auto),
-          cell(fill: colors.a, authors_str),
+          cell(authors_str),
           cell(utils.current-section),
-          cell(uni-short-date.display()),
+          // cell(fill: rgb("#f6f5f4"), uni-short-date.display()),
           // cell(""),
           if lang == "Chinese" {
-            cell([第#chinesenumber(sections.len())节])
+            cell(fill: colors.c, fill_text: white, [第#chinesenumber(sections.len())节])
           } else {
-            cell([Section~#Romannumber(sections.len())])
+            cell(fill: colors.c, fill_text: white, [Section~#Romannumber(sections.len())])
           },
         )
       })
@@ -257,7 +278,8 @@
 
   let progress-barline = locate(
     loc => {
-      if uni-progress-bar.at(loc) {
+      let flag = uni-barline_flag.at(loc)
+      if flag and uni-progress-bar.at(loc) {
         let cell = block.with(width: 100%, height: 100%, above: 0pt, below: 0pt, breakable: false)
         let colors = uni-colors.at(loc)
 
@@ -279,16 +301,17 @@
         let colors = uni-colors.at(loc)
         let lang = uni-lang.at(loc)
         let title = if lang == "Chinese" { [目录] } else { [Contents] }
-        block(
-          fill: colors.c,
-          inset: (x: .5em),
-          grid(
-            columns: (100%,),
-            // columns: (100%, 40%),
-            align(top + left, heading(level: 1, text(fill: colors.a, title))),
-            // align(top + right, text(fill: colors.a.lighten(65%), utils.current-section)),
-          ),
-        )
+        align(top, heading(level: 1, title))
+        // block(
+        //   fill: colors.c,
+        //   inset: (x: .5em),
+        //   grid(
+        //     columns: (100%,),
+        //     // columns: (100%, 40%),
+        //     align(top + left, heading(level: 1, text(fill: colors.a, title))),
+        //     // align(top + right, text(fill: colors.a.lighten(65%), utils.current-section)),
+        //   ),
+        // )
       },
     )
   }
@@ -296,20 +319,37 @@
   let header = {
     set align(top)
     counter(footnote).update(0)
-    grid(rows: (auto, auto), row-gutter: 5mm, progress-barline, header-text)
+    locate(
+        loc => {
+          let flag = uni-barline_flag.at(loc)
+          let logo = uni-logo.at(loc)
+          place(top + right, dx: -0.6em, dy: 0.5em, logo)
+          if flag {
+          grid(rows: (auto, auto), row-gutter: 9.1mm, progress-barline, [
+            #grid(rows: (auto), columns:(1.5em,auto), "", header-text)
+            ])
+          } else {
+            v(10mm)
+            grid(rows: (auto), columns:(1.5em,auto), "", header-text)
+          }
+          
+          
+        },
+      )
+    // grid(rows: (auto, auto), row-gutter: 5mm, progress-barline, header-text)
   }
 
   let footer = {
     set text(size: 10pt)
     set align(center + bottom)
-    let cell(fill: none, it) = rect(
+    let cell(fill: rgb("#f6f5f4"), fill_text: rgb("77767b"), it) = rect(
       width: 100%,
       height: 100%,
       inset: 1mm,
       outset: 0mm,
       fill: fill,
       stroke: none,
-      align(horizon, text(fill: white, it)),
+      align(horizon, text(fill: fill_text, it)),
     )
     locate(loc => {
       let colors = uni-colors.at(loc)
@@ -324,23 +364,23 @@
           authors_str = authors_str + val + h(5%)
         }
       }
-      show: block.with(width: 100%, height: auto, fill: colors.b)
+      // show: block.with(width: 100%, height: auto, fill: colors.b)
       grid(
-        columns: (20%, 1fr, 12%, 8%),
+        columns: (15%, 1fr, 15%),
         // columns: (25%, 1fr, 15%),
         rows: (1.5em, auto),
-        cell(fill: colors.a, authors_str),
+        cell(authors_str),
         if type(title) == str {
           cell(str(title).replace("\n", ""))
         } else {
           cell(to-string(title))
         },
-        cell(""),
+        // cell(""),
         // cell(uni-short-date.display()),
         if lang == "Chinese" {
-          cell([目录])
+          cell(fill: colors.c, fill_text: white,[目录])
         } else {
-          cell([Contents])
+          cell(fill: colors.c, fill_text: white,[Contents])
         },
       )
     })
@@ -356,13 +396,16 @@
   // logic.polylux-slide(align(horizon)[#body]) // 注释掉不统计页数
 }
 
-#let slide(title: none, header: none, footer: none, header-percent: 70%, body) = {
-  let body = pad(x: 2em, y: 1em, body)
+#let slide(title: none, header: none, footer: none, header-percent: 70%,left_s: 2em, right_s:2em, body) = {
+  let body = pad(left: left_s,right:right_s, y: 0em, body)
+  set footnote.entry(gap: 0.3em)
+
   show figure.caption: it => [#it.body] // 去除图xxx
   // set footnote(numbering: "[1]")
   let progress-barline = locate(
     loc => {
-      if uni-progress-bar.at(loc) {
+      let flag = uni-barline_flag.at(loc)
+      if flag and uni-progress-bar.at(loc) {
         let cell = block.with(width: 100%, height: 100%, above: 0pt, below: 0pt, breakable: false)
         let colors = uni-colors.at(loc)
 
@@ -385,37 +428,74 @@
       locate(
         loc => {
           let colors = uni-colors.at(loc)
-          block(
-            fill: colors.c,
-            inset: (x: .5em),
-            grid(
-              columns: (header-percent, 100% - header-percent),
-              align(top + left, heading(level: 2, text(fill: colors.a, title))),
-              align(top + right, text(fill: colors.a.lighten(65%), utils.current-section)),
-            ),
+          let grad = uni-grad.at(loc)
+          // block(
+          //   fill: colors.c,
+          //   inset: (x: .5em),
+          //   grid(
+          //     columns: (header-percent, 100% - header-percent),
+          //     align(top + left, heading(level: 2, text(fill: colors.a, title))),
+          //     // align(top + right, text(fill: colors.a.lighten(65%), utils.current-section)),
+          //   ),
+          // )
+
+          // show: block.with(stroke: (bottom: 1mm + colors.a), inset: 1em)
+          
+          align(top, 
+                [
+                  #show: block.with(stroke: (bottom: 1mm + grad), inset: 0.6em)
+                  #heading(level: 2, title)
+                ]
           )
         },
       )
     } else { [] }
   }
-
+  
   let header = {
     set align(top)
     counter(footnote).update(0)
-    grid(rows: (auto, auto), row-gutter: 5mm, progress-barline, header-text)
+    locate(
+        loc => {
+          let flag = uni-barline_flag.at(loc)
+          let logo = uni-logo.at(loc)
+          if flag {
+          grid(rows: (auto, auto), row-gutter: 4.9mm, progress-barline, [
+            #grid(rows: (auto), columns:(1em,auto), "", header-text)
+            ])
+          } else {
+            v(5mm)
+            grid(rows: (auto), columns:(1em,auto), "", header-text)
+          }
+          place(top + right, dx: -0.6em, dy: 0.5em, logo)
+        },
+      )
   }
+  // let content = locate(loc => {
+  //   let color = uni-colors.at(loc)
+  //   let sections = sections-state.at(loc)
+  //   let sections_num = sections.len() + 1
+  //   // let color_grad = gradient.linear(color.a, color.b).sharp(2)
+  //   set align(center + horizon)
+  //   show: block.with(stroke: (bottom: 1mm + color.a), inset: 1em)
+  //   set text(size: 1.5em)
+  //   v(-10%)
+  //   utils.register-section(name)
+  //   strong([#text(fill: color.a)[#sections_num.]#h(4%)#name])
+  // })
+  
 
   let footer = {
     set text(size: 10pt)
     set align(center + bottom)
-    let cell(fill: none, it) = rect(
+    let cell(fill: rgb("#f6f5f4"), fill_text: rgb("77767b"), it) = rect(
       width: 100%,
       height: 100%,
       inset: 1mm,
       outset: 0mm,
       fill: fill,
       stroke: none,
-      align(horizon, text(fill: white, it)),
+      align(horizon, text(fill: fill_text, it)),
     )
     if footer != none {
       footer
@@ -424,6 +504,7 @@
         loc => {
           let colors = uni-colors.at(loc)
           let authors = uni-authors.at(loc)
+          let lang = uni-lang.at(loc)
           let authors_str = ""
           for val in authors{
             if val == authors.last() {
@@ -432,16 +513,18 @@
               authors_str = authors_str + val + h(5%)
             }
           }
-          show: block.with(width: 100%, height: auto, fill: colors.b)
+          // show: block.with(width: 100%, height: auto, fill: colors.b)
           grid(
-            columns: (20%, 1fr, 12%, 8%),
+            columns: (15%, 1fr, 15%),
             // columns: (20%, 1fr, 20%),
             rows: (1.5em, auto),
-            cell(fill: colors.a, authors_str),
+            cell(authors_str),
             cell(utils.current-section),
             // cell(""),
-            cell(uni-short-date.display()),
-            cell([#logic.logical-slide.display()~/~#utils.last-slide-number]),
+            // cell(uni-short-date.display()),
+            if lang == "Chinese" {
+            cell(fill: colors.c, fill_text: white, [#logic.logical-slide.display()~/~#utils.last-slide-number~页])} else {
+              cell(fill: colors.c, fill_text: white, [Page~#logic.logical-slide.display()~/~#utils.last-slide-number])}
             // cell(logic.logical-slide.display() + [~/~] + utils.last-slide-number),
           )
         },
@@ -450,7 +533,7 @@
   }
 
   set page(
-    margin: (top: 2em, bottom: 1em, x: 0em),
+    margin: (top: 3.5em, bottom: 1em, x: 0em),
     header: header,
     footer: footer,
     footer-descent: 0em,
@@ -462,7 +545,7 @@
 
 #let focus-slide(background-color: none, background-img: none, body) = {
   let background-color = if background-img == none and background-color == none {
-    rgb("#A63446")
+    rgb("#00561F")
   } else {
     background-color
   }
@@ -478,15 +561,31 @@
       let logo = uni-inv-logo.at(loc)
       let title = uni-title.at(loc)
       let authors = uni-authors.at(loc)
+      // let authors_str = ""
+      //     for val in authors{
+      //       if val == authors.last() {
+      //         authors_str = authors_str + val
+      //       } else {
+      //         authors_str = authors_str + val + h(5%)
+      //       }
+      // }
       let emails = uni-emails.at(loc)
       let institutions = uni-institutions.at(loc)
       let date = uni-short-date.at(loc)
       let lang = uni-lang.at(loc)
       if logo != none {
-        place(top + right, dx: -0.5em, dy: 0.5em, logo)
+        place(top + right, dx: -0.6em, dy: 0.5em, logo)
       }
-      set text(fill: white, size: if lang == "Chinese" { 3.5em } else { 2em })
+      set text(fill: white, weight: "black", size: if lang == "Chinese" { 3.5em } else { 2em })
       align(center + horizon, body)
+      place(left + bottom, dx: 0.5em, dy: -0.5em,  [
+        #set text(fill: white, weight: "bold", size: if lang == "Chinese" { 25pt } else { 25pt })
+        #authors.first()，#date
+      ])
+      place(right + bottom, dx: -0.5em, dy: -0.5em,  [
+        #set text(fill: white, weight: "bold", size: if lang == "Chinese" { 25pt } else { 25pt })
+          #align(right)[#emails.first()]
+      ])
       // logic.polylux-slide(align(center + horizon, body))
       // 注释掉不统计页数
     },
@@ -547,7 +646,8 @@
 
   let progress-barline = locate(
     loc => {
-      if uni-progress-bar.at(loc) {
+      let flag = uni-barline_flag.at(loc)
+      if flag and uni-progress-bar.at(loc) {
         let cell = block.with(width: 100%, height: 100%, above: 0pt, below: 0pt, breakable: false)
         let colors = uni-colors.at(loc)
 
@@ -591,14 +691,14 @@
   let footer = {
     set text(size: 10pt)
     set align(center + bottom)
-    let cell(fill: none, it) = rect(
+    let cell(fill: rgb("#f6f5f4"), fill_text: rgb("77767b"), it) = rect(
       width: 100%,
       height: 100%,
       inset: 1mm,
       outset: 0mm,
       fill: fill,
       stroke: none,
-      align(horizon, text(fill: white, it)),
+      align(horizon, text(fill: fill_text, it)),
     )
     locate(
       loc => {
@@ -614,16 +714,18 @@
             authors_str = authors_str + val + h(5%)
           }
         }
-        show: block.with(width: 100%, height: auto, fill: colors.b)
+        // show: block.with(width: 100%, height: auto, fill: colors.b)
         grid(
-          columns: (20%, 1fr, 12%, 8%),
+          columns: (15%, 1fr, 15%),
           // columns: (20%, 1fr, 20%),
           rows: (1.5em, auto),
-          cell(fill: colors.a, authors_str),
+          cell(authors_str),
           cell(utils.current-section),
-          cell(uni-short-date.display()),
+          // cell(uni-short-date.display()),
           // cell(""),
-          cell([#logic.logical-slide.display()~/~#utils.last-slide-number]),
+          if lang == "Chinese" {
+            cell(fill: colors.c, fill_text: white, [#logic.logical-slide.display()~/~#utils.last-slide-number~页])} else {
+              cell(fill: colors.c, fill_text: white, [Page~#logic.logical-slide.display()~/~#utils.last-slide-number])}
           // cell(logic.logical-slide.display() + [~/~] + utils.last-slide-number),
         )
       },

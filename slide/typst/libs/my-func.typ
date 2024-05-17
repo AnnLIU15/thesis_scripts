@@ -1,4 +1,5 @@
 #import "@preview/polylux:0.3.1": *
+#import "@preview/cetz:0.2.2"
 
 #import logic:*
 #import utils:*
@@ -76,17 +77,57 @@
   }
 }
 
-#let citef(lang: "en", content) = {
+#let citef(lang: "en", cjk-latin-spacing: auto, content) = {
   if type(content) == "content" {
-    footnote()[#text(lang: lang, cite(content, form: "full"))]
+    footnote()[#text(
+        lang: lang,
+        cjk-latin-spacing: cjk-latin-spacing,
+        cite(content, form: "full"),
+      )]
+  } else if type(content) == "string" {
+    footnote()[#text(
+        lang: lang,
+        cjk-latin-spacing: cjk-latin-spacing,
+        cite(label(content), form: "full"),
+      )]
+  } else if type(content) == "label" {
+    footnote()[#text(
+        lang: lang,
+        cjk-latin-spacing: cjk-latin-spacing,
+        cite(content, form: "full"),
+      )]
+  }
+}
+
+#let citez(content) = {
+  if type(content) == "array" {
+    for val in content{
+      citez(val)
+      if val != content.last() {
+        super[,~]
+      }
+    }
   } else {
-    footnote()[#text(lang: lang, cite(label(content), form: "full"))]
+    citef(lang: "zh", cjk-latin-spacing: auto, content)
+  }
+}
+
+#let citee(content) = {
+  if type(content) == "array" {
+    for val in content{
+      citee(val)
+      if val != content.last() {
+        super[,~]
+      }
+    }
+  } else {
+    citef(lang: "en", cjk-latin-spacing: none, content)
   }
 }
 
 #let polylux-outline-my(enum-args: (:), padding: 0pt) = locate(loc => {
   let sections = sections-state.final(loc)
-
+  set text(size: 30pt)
   pad(padding, enum(
     tight: false,
     spacing: 80% / sections.len(),
@@ -94,3 +135,33 @@
     ..sections.map(section => link(section.loc, section.body)),
   ))
 })
+
+#let drawMarkedCircles(offset, width: 1.5) = {
+    import cetz.draw: *
+    let A = (offset - width, width);
+    let B = (offset + width, width);
+    let C = (offset, -width / calc.sqrt(2));
+    
+    // 绘制中心圆，不设置边框
+    let center = (offset, width)
+    circle(center, radius: calc.tan(10deg)*(width / calc.sqrt(2)/2), name: "center", stroke: none)
+    
+    // 绘制包含三个圆的矩形框
+    rect((offset - width - 1, width + 1), (offset + 1 + width, -1 - width / calc.sqrt(2)), )
+    // set-style(
+    //   content: (padding: .2),
+    //   fill: gray.lighten(70%),
+    //   stroke: gray.lighten(100%),
+    // )
+    // 绘制标记A的圆
+    circle(A, radius: 0.5, name: "A", fill: blue.lighten(70%))
+    content(A, [A]) // 在圆A内添加标记A
+    
+    // 绘制标记B的圆
+    circle(B, radius: 0.5, name: "B", fill: blue.lighten(70%))
+    content(B, [B]) // 在圆B内添加标记B
+    
+    // 绘制标记C的圆
+    circle(C, radius: 0.5, name: "C", fill: blue.lighten(70%))
+    content(C, [C]) // 在圆C内添加标记C
+}
