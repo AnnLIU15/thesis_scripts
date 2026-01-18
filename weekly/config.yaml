@@ -1,0 +1,50 @@
+# 邮件账户配置 (支持多账户)
+accounts:
+- email: "xxxxx@xxxxx.xxxx.xxxx.cn"
+  password: "xxxxxxxxxxxxxxxx" # 你的密码/密钥（部分邮箱需要单独密钥）
+  imap_server: "imaphz.qiye.163.com" # 你的imap_server
+  smtp_server: "smtphz.qiye.163.com" # 你的smtp_server
+  smtp_port: 465 # 你的smtp_port
+
+# 收件人配置
+recipients:
+- "xxxxx@mail.sysu.edu.cn"
+- "xxxxx@mail.sysu.edu.cn"
+
+# 团队成员名单
+names:
+- "xx"
+- "aa"
+- "bb"
+- "cc"
+- "dd"
+- "ee"
+- "ff"
+
+# 路径配置
+paths:
+  base_path: "E:/CourseData"
+  desktop_path: "C:/Users/yourname/Desktop"
+  report_prefix: "周报_xxxx组_"
+
+# 下载配置
+download:
+  attachment_keywords: "周报"
+  allowed_extensions:
+  - pdf
+  - docx
+  - txt
+  - doc
+  - md
+
+# PDF配置
+pdf:
+  word_to_pdf_enabled: true
+  merge_enabled: true
+  add_toc: true
+  output_filename_template: "{prefix}{date}.pdf"
+
+# 多线程配置
+threading:
+  enabled: true
+  max_workers: 4

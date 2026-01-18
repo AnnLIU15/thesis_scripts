@@ -1,1 +1,0 @@
-please download https://github.com/adobe-fonts/source-han-sans/releases/download/2.004R/SourceHanSansSC.zip for simplified chinese font

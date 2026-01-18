@@ -30,10 +30,10 @@
 #let circ = { $compose$ }
 #let bullet = { $•$ }
 #let cdot = { $dot.op$ }
-#let cap = { $sect$ }
+#let cap = { $inter$ }
 #let cup = { $union$ }
 #let uplus = { $union.plus$ }
-#let sqcap = { $sect.sq$ }
+#let sqcap = { $inter.sq$ }
 #let sqcup = { $union.sq$ }
 #let vee = { $and$ }
 #let land = { $and$ }
@@ -48,11 +48,11 @@
 #let triangleright = { $triangle.stroked.r$ }
 #let smalltriangleleft = { $triangle.stroked.small.l$ }
 #let smalltriangleright = { $triangle.stroked.small.r$ }
-#let oplus = { $plus.circle$ }
-#let ominus = { $minus.circle$ }
-#let otimes = { $times.circle$ }
+#let oplus = { $plus.o$ }
+#let ominus = { $minus.o$ }
+#let otimes = { $times.o$ }
 #let oslash = { $⊘$ }
-#let odot = { $dot.circle$ }
+#let odot = { $dot.o$ }
 #let bigcirc = { $circle.big$ }
 #let ddagger = { $dagger.double$ }
 #let amalg = { $⨿$ }
@@ -124,9 +124,9 @@
 // Miscellaneous Symbols
 #let ldots = { $dots.h$ }
 #let aleph = { $א$ }
-#let hbar = { $planck.reduce$ }
+#let hbar = { $ℏ$ }
 #let wp = { $℘$ }
-#let mho = { $ohm.inv$ }
+#let mho = { $℧$ }
 #let cdots = { $dots.h.c$ }
 #let emptyset = { $nothing$ }
 #let surd = { $\u{8730}$ }
@@ -151,14 +151,14 @@
 #let int = { $integral$ }
 #let oint = { $integral.cont$ }
 #let Join = { $⨝$ }
-#let bigcap = { $sect.big$ }
+#let bigcap = { $inter.big$ }
 #let bigcup = { $union.big$ }
 #let bigsqcup = { $union.sq.big$ }
 #let bigvee = { $or.big$ }
 #let bigwedge = { $and.big$ }
-#let bigodot = { $dot.circle.big$ }
-#let bigotimes = { $times.circle.big$ }
-#let bigoplus = { $plus.circle.big$ }
+#let bigodot = { $dot.o.big$ }
+#let bigotimes = { $times.o.big$ }
+#let bigoplus = { $plus.o.big$ }
 #let biguplus = { $union.plus.big$ }
 
 // Log-like Symbols
@@ -298,7 +298,7 @@
 #let blacktriangle = { $triangle.filled.small.t$ }
 #let bigstar = { $★$ }
 #let diagup = { $∕$ }
-#let hslash = { $planck.reduce$ }
+#let hslash = { $ℏ$ }
 #let lozenge = { $lozenge.stroked$ }
 #let nexists = { $exists.not$ }
 #let Bbbk = { $𝕜$ }
@@ -323,24 +323,24 @@
 #let boxtimes = { $times.square$ }
 #let ltimes = { $⋉$ }
 #let curlywedge = { $and.curly$ }
-#let circledcirc = { $circle.nested$ }
+#let circledcirc = { $compose.o$ }
 #let smallsetminus = { $∖$ }
 #let veebar = { $⊻$ }
 #let boxdot = { $dot.square$ }
 #let rtimes = { $⋊$ }
 #let curlyvee = { $or.curly$ }
 #let centerdot = { $dot.c$ }
-#let Cap = { $sect.double$ }
+#let Cap = { $inter.double$ }
 #let doublebarwedge = { $⩞$ }
 #let boxplus = { $plus.square$ }
 #let leftthreetimes = { $times.l$ }
-#let circleddash = { $dash.circle$ }
+#let circleddash = { $dash.o$ }
 #let intercal = { $⊺$ }
 #let Cup = { $union.double$ }
 #let boxminus = { $minus.square$ }
 #let divideontimes = { $times.div$ }
 #let rightthreetimes = { $times.r$ }
-#let circledast = { $ast.circle$ }
+#let circledast = { $convolve.o$ }
 
 // AMS Binary Relations
 #let leqq = { $lt.equiv$ }
@@ -508,30 +508,30 @@
 
 // Selected stmaryrd Binary Operators (that are available in the NewComputerModern Math font)
 #let boxcircle = { $⧇$ }
-#let varogreaterthan = { $gt.circle$ }
-#let ogreaterthan = { $gt.circle$ }
-#let ogtr = { $gt.circle$ }
+#let varogreaterthan = { $gt.o$ }
+#let ogreaterthan = { $gt.o$ }
+#let ogtr = { $gt.o$ }
 #let varcurlyvee = { $or.curly$ }
-#let varobslash = { $backslash.circle$ }
-#let obslash = { $backslash.circle$ }
-#let varolessthan = { $lt.circle$ }
-#let olessthan = { $lt.circle$ }
-#let oless = { $lt.circle$ }
-#let varotimes = { $times.circle$ }
+#let varobslash = { $backslash.o$ }
+#let obslash = { $backslash.o$ }
+#let varolessthan = { $lt.o$ }
+#let olessthan = { $lt.o$ }
+#let oless = { $lt.o$ }
+#let varotimes = { $times.o$ }
 #let boxbar = { $◫$ }
 #let obar = { $⦶$ }
 #let varobar = { $⌽$ }
 #let varcurlyvee = { $and.curly$ }
-#let varocircle = { $circle.nested$ }
-#let ocircle = { $circle.nested$ }
-#let varominus = { $minus.circle$ }
+#let varocircle = { $compose.o$ }
+#let ocircle = { $compose.o$ }
+#let varominus = { $minus.o$ }
 #let boxbox = { $⧈$ }
 #let emptybox = { $square.stroked$ }
 #let talloblong = { $⫾$ }
-#let varoast = { $ast.circle$ }
-#let oast = { $ast.circle$ }
-#let varodot = { $dot.circle$ }
-#let varoplus = { $dot.circle$ }
+#let varoast = { $convolve.o$ }
+#let oast = { $convolve.o$ }
+#let varodot = { $dot.o$ }
+#let varoplus = { $dot.o$ }
 #let Yup = { $⅄$ }
 #let boxbslash = { $⧅$ }
 #let boxslash = { $⧄$ }
@@ -542,4 +542,4 @@
 
 // Selected stmaryrd Large Binary Operators (that are available in the NewComputerModern Math font)
 #let biginterleave = { $⫼$ }
-#let bigsqcap = { $sect.sq.big$ }
+#let bigsqcap = { $inter.sq.big$ }
